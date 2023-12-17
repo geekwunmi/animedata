@@ -10,68 +10,104 @@ def getGenresAsString(genres):
 
   return ", ".join(genreNames)
 
-def getProducersFromDict(producers): # this isn't work yet lolz i dont know how to maniplate dictionaries and sstrongs yet
-  for index,producer in enumerate(producers) :
-    if index == "name":
-      return producer
-    else:
-      pass
+def getProducersFromDict(producers):
+  producerNames = []
 
-def main():
-  animeList = []
+  for producer in producers:
+    name = producer["name"]
+    producerNames.append(name)
 
- # there's a rate limit of 30 requests/minute and 2 requests/second
+  return ", ".join(producerNames)
 
+
+def fetchData(page: int, limit: int):
   jikan = Jikan()
 
-  # fetch values from API
-  print("Fetching data from Jikan...")
+  print("Fetching data from Jikan... Page:", page)
   result = jikan.search(
     "anime",
     "",
-    1,
+    page,
     {
-      "limit": 20,
+      "limit": limit,
       "order_by": "score",
       "sort": "desc",
       "start_date": "2020-01-01",
-      "type":"tv",
-      "status":"complete"
+      "type": "tv",
+      "status": "complete",
+      "min_score": "6"
     }
   )
 
-  print("Got", len(result["data"]), "records...")
+  return result
 
-  if len(result["data"]) != 0:
-    print("Extracting and formating data...")
+def appendResultToList(animeList: list[any], data: dict[str, any]):
+  for item in data:
+    anime = {
+      "id": item["mal_id"],
+      "name": item["title"],
+      "season": item["season"], # Need to confirm what this is. Is it season as in Summer, Fall, etc. Or season as in number of seasons. Not sure the API provides that.
+      "score": item["score"], # e.g: PG - Children
+      "year": item["year"], # can be None, maybe ["aired"]["from"] date can be used instead by extracting the year part of the date if "year" is None?
+      "link": item["url"],
+      "image": item["images"]["jpg"]["image_url"],
+      "genre": getGenresAsString(item["genres"]),
+      "producers": getProducersFromDict(item["producers"]),
+      "members": item["members"]
+      # "moreinfo":item["moreinfo"]
+    }
 
-    # loop through each item and extract: Name, season, rating, genre, year, etc...
-    for item in result["data"]:
-      anime = {
-        "id": item["mal_id"],
-        "name": item["title"],
-        "season": item["season"], # Need to confirm what this is. Is it season as in Summer, Fall, etc. Or season as in number of seasons. Not sure the API provides that.
-        "score": item["score"], # e.g: PG - Children
-        "year": item["year"], # can be None, maybe ["aired"]["from"] date can be used instead by extracting the year part of the date if "year" is None?
-        "link": item["url"],
-        "image": item["images"]["jpg"]["image_url"],
-        "genre": getGenresAsString(item["genres"]),
-        "producers":getProducersFromDict(item["producers"])
-        # "moreinfo":item["moreinfo"]
-      }
+    animeList.append(anime)
+  
+  return animeList
 
-      animeList.append(anime)
 
-  # load into dataframe and generate excel
-  currentTimeStamp = time.time()
-  sheetName = "animeList" + str(currentTimeStamp) + ".xlsx"
+def main():
+  limit = 20
+  page = 1
+  requestCount = 0
+
+  # fetch first set of data
+  result = fetchData(page, limit)
+  requestCount += 1
+
+  if len(result["data"]) == 0:
+    print("No data returned from Jikan API...")
+    return
+  
+  animeList = appendResultToList([], result["data"])
+
+  # get total size of result to determine the number of requests to fetch remaining records
+  totalSizeFromApi = result["pagination"]["items"]["total"]
+  print("Total size:", totalSizeFromApi, "fetching", limit, "per page")
+
+  # reduce totalSizeFromApi by the limit since we've fetched the first set
+  totalSizeFromApi -= limit
+
+  while totalSizeFromApi > 0:
+    # increment page and fetch next set
+    page += 1
+    result = fetchData(page, limit)
+    requestCount += 1
+
+    animeList = appendResultToList(animeList, result["data"])
+
+    # again, reduce the totalSizeFromApi by the limit since we've fetched another set
+    totalSizeFromApi -= limit
+
+    if requestCount == 25:
+      # pause for a minute in order not to hit the API rate limit and reset requestCount
+      print("Sleeping for 60 seconds... zzzzz...")
+      time.sleep(60)
+
+      print("Waking up and resuming request...")
+      requestCount = 0
+
   dataFrame = pd.DataFrame(data=animeList)
-
   pd.set_option("display.max_columns",10)
   print(dataFrame.head(10))
 
-  # dataFrame.to_excel(sheetName, index=False)
+  return
 
-  # print("Data exported into", sheetName)
 main()
 
