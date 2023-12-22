@@ -21,6 +21,49 @@ def getProducersFromDict(producers):
 
     return ", ".join(producerNames)
 
+def getStudio(studios):
+    studionames = []
+
+    for studio in studios:
+        name = studio["name"]
+        studionames.append(name)
+
+    return ",".join(studionames)
+
+def getTheme(themes):
+    themenames = []
+
+    for theme in themes:
+        name = theme["name"]
+        themenames.append(name)
+
+    return ", ".join(themenames)
+
+def getDemographic(demographics):
+    demographicnames = []
+
+    for demographic in demographics:
+        name = demographic["name"]
+        demographicnames.append(name)
+
+    return ", ".join(demographicnames)
+
+def getStartDate(startdate):
+    date = []
+
+    for start in startdate.keys():
+        if start == 'from':
+            date.append(startdate[start])
+    return date[0]
+
+def getEndDate(enddate):
+    date = []
+
+    for end in enddate.keys():
+        if end == 'to':
+            date.append(enddate[end])
+    return date[0]
+
 
 def fetchData(page: int, limit: int):
     jikan = Jikan()
@@ -36,8 +79,8 @@ def fetchData(page: int, limit: int):
             "sort": "desc",
             "start_date": "2020-01-01",
             "type": "tv",
-            "status": "complete",
-            "min_score": "6"
+            "status": "complete"
+            # "min_score": "6"
         }
     )
 
@@ -58,10 +101,18 @@ def appendResultToList(animeList: list[any], data: dict[str, any]):
             "image": item["images"]["jpg"]["image_url"],
             "genre": getGenresAsString(item["genres"]),
             "producers": getProducersFromDict(item["producers"]),
-            "members": item["members"]
-            # "moreinfo":item["moreinfo"]
+            "members": item["members"],
+            "start_date": getStartDate(item["aired"]),
+            "end_date": getEndDate(item["aired"]),
+            "studios": getStudio(item["studios"]),
+            "source": item["source"],
+            "themes": getTheme(item["themes"]),
+            "duration": item["duration"],
+            "rank": item["rank"],
+            "popularity": item["popularity"],
+            "favorites": item["favorites"],
+            "demographics": getDemographic(item["demographics"])
         }
-
         animeList.append(anime)
 
     return animeList
@@ -91,6 +142,7 @@ def main():
 
     while totalSizeFromApi > 0:
         # increment page and fetch next set
+        time.sleep(1)
         page += 1
         result = fetchData(page, limit)
         requestCount += 1
@@ -109,8 +161,9 @@ def main():
             requestCount = 0
 
     dataFrame = pd.DataFrame(data=animeList)
-    pd.set_option("display.max_columns", 10)
+    pd.set_option("display.max_columns", 20)
     print(dataFrame.head(10))
+    dataFrame.to_csv(r"C:\Users\Ade\Desktop\Personal\Python\Project Portfolio\animedashboard\animefile" + str(time.localtime()) + ".csv")
 
     return
 
