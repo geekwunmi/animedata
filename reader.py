@@ -1,6 +1,7 @@
 from jikanpy import Jikan
 import pandas as pd
 import time
+from publisher import pushToSheets
 
 
 def getGenresAsString(genres):
@@ -94,23 +95,23 @@ def appendResultToList(animeList: list[any], data: dict[str, any]):
             "name": item["title"],
             "season": item["season"],
             # Need to confirm what this is. Is it season as in Summer, Fall, etc. Or season as in number of seasons. Not sure the API provides that.
-            "score": item["score"],  # e.g: PG - Children
-            "year": item["year"],
+            "score": item["score"] if item["score"] is not None else 0,
+            "year": item["year"] if item["year"] is not None else 0,
             # can be None, maybe ["aired"]["from"] date can be used instead by extracting the year part of the date if "year" is None?
             "link": item["url"],
             "image": item["images"]["jpg"]["image_url"],
             "genre": getGenresAsString(item["genres"]),
             "producers": getProducersFromDict(item["producers"]),
-            "members": item["members"],
+            "members": item["members"] if item["members"] is not None else 0,
             "start_date": getStartDate(item["aired"]),
             "end_date": getEndDate(item["aired"]),
             "studios": getStudio(item["studios"]),
             "source": item["source"],
             "themes": getTheme(item["themes"]),
             "duration": item["duration"],
-            "rank": item["rank"],
-            "popularity": item["popularity"],
-            "favorites": item["favorites"],
+            "rank": item["rank"] if item["rank"] is not None else 0,
+            "popularity": item["popularity"] if item["popularity"] is not None else 0,
+            "favorites": item["favorites"] if item["favorites"] is not None else 0,
             "demographics": getDemographic(item["demographics"])
         }
         animeList.append(anime)
@@ -160,10 +161,12 @@ def main():
             print("Waking up and resuming request...")
             requestCount = 0
 
-    dataFrame = pd.DataFrame(data=animeList)
-    pd.set_option("display.max_columns", 20)
-    print(dataFrame.head(10))
-    dataFrame.to_csv(r"C:\Users\Ade\Desktop\Personal\Python\Project Portfolio\animedashboard\animefile" + str(time.localtime()) + ".csv")
+    pushToSheets(animeList=animeList)
+
+    # dataFrame = pd.DataFrame(data=animeList)
+    # pd.set_option("display.max_columns", 20)
+    # print(dataFrame.head(10))
+    # dataFrame.to_csv(r"C:\Users\Ade\Desktop\Personal\Python\Project Portfolio\animedashboard\animefile" + str(time.localtime()) + ".csv")
 
     return
 
