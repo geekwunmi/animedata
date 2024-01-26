@@ -1,21 +1,54 @@
 aiohttp==3.9.1
 aiosignal==1.3.1
 attrs==23.1.0
-certifi==2023.11.17
+cachetools==5.3.2
+certifi @ file:///private/tmp/python-certifi-20231122-76778-mp0qht/certifi-2023.11.17
 charset-normalizer==3.3.2
+distlib==0.3.7
+docutils @ file:///private/tmp/docutils-20231122-75517-1f76zew/docutils-0.20.1
+editables @ file:///private/tmp/python-hatchling--editables-20231123-76489-d4gnpl/editables-0.3
 et-xmlfile==1.1.0
+filelock==3.13.1
+flit_core @ file:///private/tmp/python-flit-core-20231122-75588-1voohoj/flit_core-3.9.0
 frozenlist==1.4.0
+google-api-core==2.15.0
+google-api-python-client==2.115.0
+google-auth==2.27.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0
+googleapis-common-protos==1.62.0
+hatchling @ file:///private/tmp/python-hatchling-20231122-76489-11tc8uh/hatchling-1.18.0
+httplib2==0.22.0
 idna==3.6
 jikanpy-v4==1.0.2
+MarkupSafe @ file:///private/tmp/python-markupsafe-20231122-76993-1ukj2ox/MarkupSafe-2.1.3
 multidict==6.0.4
 numpy==1.26.2
+oauthlib==3.2.2
 openpyxl==3.1.2
+packaging @ file:///private/tmp/python-packaging-20231122-75663-ybu60g/packaging-23.2
 pandas==2.1.4
+pathspec @ file:///private/tmp/python-pathspec-20231122-75737-134e664/pathspec-0.11.2
+platformdirs==4.1.0
+pluggy @ file:///private/tmp/python-pluggy-20231122-76084-1xs0t8r/pluggy-1.3.0
+protobuf==4.25.2
+pyasn1==0.5.1
+pyasn1-modules==0.3.0
+Pygments @ file:///private/tmp/pygments-20231122-76706-51zmym/pygments-2.17.2
+pyparsing==3.1.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
 requests==2.31.0
+requests-oauthlib==1.3.1
+rsa==4.9
+setuptools-scm @ file:///private/tmp/python-setuptools-scm-20231122-75881-1rtpqgw/setuptools-scm-8.0.4
 simplejson==3.19.2
 six==1.16.0
+tabulate @ file:///private/tmp/python-tabulate-20231122-77208-k6d3tb/tabulate-0.9.0
+trove-classifiers @ file:///private/tmp/python-trove-classifiers-20231122-76286-1llzjtg/trove-classifiers-2023.11.22
+typing_extensions @ file:///private/tmp/python-typing-extensions-20231122-75808-ql9kyo/typing_extensions-4.8.0
 tzdata==2023.3
+uritemplate==4.1.1
 urllib3==2.1.0
+virtualenv==20.25.0
 yarl==1.9.4
