@@ -161,12 +161,12 @@ def main():
             print("Waking up and resuming request...")
             requestCount = 0
 
-    pushToSheets(animeList=animeList)
+    # pushToSheets(animeList=animeList)
 
-    # dataFrame = pd.DataFrame(data=animeList)
+    dataFrame = pd.DataFrame(data=animeList)
     # pd.set_option("display.max_columns", 20)
     # print(dataFrame.head(10))
-    # dataFrame.to_csv(r"C:\Users\Ade\Desktop\Personal\Python\Project Portfolio\animedashboard\animefile" + str(time.localtime()) + ".csv")
+    dataFrame.to_csv(r"C:\Users\Ade\Desktop\Personal\Python\Project Portfolio\animedashboard\animefile" + str(time.localtime()) + ".csv")
 
     return
 
