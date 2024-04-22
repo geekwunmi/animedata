@@ -10,4 +10,9 @@
 - In a terminal window, navigate to this folder and activate the virtual environment by running `python3 -m venv env`
 - Run `python reader.py`
 
+# Functionality
+- Create end to end pipeline of anime dataset for descriptive and inferential analyis.
+- Long term implications focus on building anime preference predictor and anime taste classification.
+- Final goal to prove Seinen lovers are elite and Seinen is far better than Shonen.
+- Output dashboard visualization can be found here https://public.tableau.com/app/profile/adecole/viz/AnimeDashboard_17027753164060/AnimeSelection
 
