@@ -37,8 +37,8 @@ def pushToSheets(animeList):
     service = build("sheets", "v4", credentials=creds)
 
     # create new spreadsheet
-    currentTimeStamp = time.time()
-    sheetName = "animeList" + str(currentTimeStamp)
+    currentTimeStamp = time.localtime()
+    sheetName = "animeList" + str(time.strftime('%Y%m%d:%H%M',currentTimeStamp))
     spreadsheet = {"properties": {"title": sheetName}}
     spreadsheet = (
         service.spreadsheets()
